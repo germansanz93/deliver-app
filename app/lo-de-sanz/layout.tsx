@@ -5,7 +5,7 @@ export default function LoDeSanzLayout({
 }) {
   return (
     <section className="flex flex-col items-center justify-center gap-4">
-      <div className="inline-block max-w-lg text-center justify-center">
+      <div className="inline-block w-10/12 max-w-3xl text-center justify-center">
         {children}
       </div>
     </section>
