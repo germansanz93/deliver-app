@@ -14,7 +14,13 @@ const addProduct = async () => {
 };
 
 const getProducts = async () => {
-  return await Product.find();
+  const products = await Product.find();
+  return products.map((product) => ({
+    name: product.name,
+    price: product.price,
+    description: product.description,
+    mediaUrl: product.mediaUrl,
+  }));
 };
 
 export { addProduct, getProducts };
