@@ -1,7 +1,7 @@
 "use client";
 import { Card, CardBody, CardFooter, Image } from "@nextui-org/react";
 
-export const ProductList = ({ products }) => {
+export const ProductList = ({ products }:{products: {name: string, price: number, mediaUrl: string}[]}) => {
   return (
     <div>
       <div>
