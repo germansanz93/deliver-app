@@ -32,7 +32,6 @@ import { usePathname } from "next/navigation";
 
 export const Navbar = () => {
   const pathname = usePathname();
-  console.log(pathname);
   const searchInput = (
     <Input
       aria-label="Search"

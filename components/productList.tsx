@@ -1,7 +1,9 @@
 "use client";
 import { Card, CardBody, CardFooter, Image } from "@nextui-org/react";
+import { useRouter } from "next/navigation";
 
-export const ProductList = ({ products }:{products: {name: string, price: number, mediaUrl: string}[]}) => {
+export const ProductList = ({ products }:{products: {id: string, name: string, price: number, mediaUrl: string}[]}) => {
+  const router = useRouter();
   return (
     <div>
       <div>
@@ -13,7 +15,7 @@ export const ProductList = ({ products }:{products: {name: string, price: number
             shadow="sm"
             key={index}
             isPressable
-            onPress={() => console.log("item pressed")}
+            onPress={() => router.push(`/lo-de-sanz/carniceria/${item.id}`)}
           >
             <CardBody className="overflow-visible p-0">
               <Image

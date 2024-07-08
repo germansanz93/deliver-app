@@ -1,7 +1,13 @@
-export default async function CarniceriaItemPage({params}:{params: {id: string}}) {
+"use client"
+
+import { usePathname } from "next/navigation";
+
+export default async function CarniceriaItemPage() {
+  const pathName = usePathname();
+  const id = pathName.split("/").pop()
   return (
     <div>
-      <h2>Item {params.id}</h2>
+      <h2>{id}</h2>
     </div>
   );
 }

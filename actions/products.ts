@@ -13,9 +13,21 @@ const addProduct = async () => {
   return saved.toObject();
 };
 
+const getProductById = async (id: string) => {
+  const product = await Product.findById(id);
+  return {
+    id: product._id.toString(),
+    name: product.name,
+    price: product.price,
+    description: product.description,
+    mediaUrl: product.mediaUrl,
+  };
+};
+
 const getProducts = async () => {
   const products = await Product.find();
   return products.map((product) => ({
+    id: product._id.toString(),
     name: product.name,
     price: product.price,
     description: product.description,
@@ -23,4 +35,4 @@ const getProducts = async () => {
   }));
 };
 
-export { addProduct, getProducts };
+export { addProduct, getProducts, getProductById };
