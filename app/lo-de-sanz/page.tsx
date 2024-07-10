@@ -3,38 +3,47 @@
 import React from "react";
 import { title } from "@/components/primitives";
 import { Card, CardBody, CardFooter, Image } from "@nextui-org/react";
+import { useRouter } from "next/navigation";
 
 export default function LoDeSanzPage() {
+  const router = useRouter();
+
   const list = [
     {
       title: "Carniceria",
       img: "/images/lo-de-sanz-carniceria.png",
       price: "$5.50",
+      url: "/lo-de-sanz/carniceria",
     },
     {
       title: "Verduleria",
       img: "/images/lo-de-sanz-verduleria.png",
       price: "$3.00",
+      url: "/lo-de-sanz/carniceria",
     },
     {
       title: "Almacen",
       img: "/images/lo-de-sanz-almacen.png",
       price: "$10.00",
+      url: "/lo-de-sanz/carniceria",
     },
     {
       title: "Fiambreria",
       img: "/images/lo-de-sanz-fiambreria.jpg",
       price: "$5.30",
+      url: "/lo-de-sanz/carniceria",
     },
     {
       title: "Bebidas",
       img: "/images/lo-de-sanz-bebidas.jpg",
       price: "$5.30",
+      url: "/lo-de-sanz/carniceria",
     },
     {
       title: "Ofertas",
       img: "/images/lo-de-sanz-ofertas.jpg",
       price: "$5.30",
+      url: "/lo-de-sanz/carniceria",
     },
   ];
   return (
@@ -49,7 +58,7 @@ export default function LoDeSanzPage() {
             shadow="sm"
             key={index}
             isPressable
-            onPress={() => console.log("item pressed")}
+            onPress={() => router.push(item.url)}
           >
             <CardBody className="overflow-visible p-0">
               <Image
