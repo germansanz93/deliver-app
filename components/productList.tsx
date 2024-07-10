@@ -7,9 +7,9 @@ import {
   Image,
   Button,
 } from "@nextui-org/react";
-import { useRouter } from "next/navigation";
 import { FaCartPlus, FaMinus, FaPlus } from "react-icons/fa";
-import { useState } from "react";
+import { useState, useContext } from "react";
+import { CartContext } from "@/context/cart";
 
 type Quantities = {
   [productId: string]: number;
@@ -21,12 +21,14 @@ export const ProductList = ({
   products: { id: string; name: string; price: number; mediaUrl: string }[];
 }) => {
   const [quantities, setQuantities] = useState<Quantities>({});
+  const { cartItems, addToCart , removeFromCart} = useContext(CartContext)
 
   const increaseQuantity = (productId: string) => {
     setQuantities((prevQuantities) => ({
       ...prevQuantities,
       [productId]: (prevQuantities[productId] || 0) + 1,
     }));
+    addToCart(products.find((product) => product.id === productId));
   };
 
   const decreaseQuantity = (productId: string) => {
@@ -34,6 +36,7 @@ export const ProductList = ({
       ...prevQuantities,
       [productId]: Math.max(0, (prevQuantities[productId] || 0) - 1),
     }));
+    removeFromCart(products.find((product) => product.id === productId));
   };
   return (
     <div>

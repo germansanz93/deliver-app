@@ -30,9 +30,13 @@ import {
 } from "@/components/icons";
 import { usePathname } from "next/navigation";
 import { FaShoppingCart } from "react-icons/fa";
+import { NavbarCart } from "./navbarCart";
+import { useContext } from "react";
+import { CartContext } from "@/context/cart";
 
 export const Navbar = () => {
   const pathname = usePathname();
+  const { getCartQuantity } = useContext(CartContext);
   const searchInput = (
     <Input
       aria-label="Search"
@@ -100,31 +104,16 @@ export const Navbar = () => {
           </Link> */}
           <ThemeSwitch />
         </NavbarItem>
-        <NavbarItem className="hidden lg:flex">{searchInput}</NavbarItem>
-        <NavbarItem className="hidden md:flex">
-          <Button
-            isExternal
-            as={Link}
-            className="text-sm font-normal text-default-600 bg-default-100"
-            href={siteConfig.links.sponsor}
-            startContent={
-              <FaShoppingCart
-                style={{ fontSize: "20px" }}
-                className="text-primary"
-              />
-            }
-            variant="flat"
-          >
-            Carrito
-          </Button>
-        </NavbarItem>
+        <NavbarItem className="hidden sm:flex">{searchInput}</NavbarItem>
+        <NavbarCart itemCount={getCartQuantity()}/>
       </NavbarContent>
 
       <NavbarContent className="sm:hidden basis-1 pl-4" justify="end">
         {/* <Link isExternal aria-label="Github" href={siteConfig.links.github}>
           <GithubIcon className="text-default-500" />
         </Link> */}
-        <ThemeSwitch />
+        {/* <ThemeSwitch /> */}
+        <NavbarCart itemCount={getCartQuantity()}/>
         <NavbarMenuToggle />
       </NavbarContent>
 
