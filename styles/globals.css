@@ -1,3 +1,11 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.card-selected {
+  border: 2px solid #0070f3; /* Change border color */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Increase shadow */
+  background-color: #f0f8ff; /* Change background color */
+  transform: scale(1.03); /* Slightly increase size */
+  transition: all 0.3s ease; /* Smooth transition */
+}

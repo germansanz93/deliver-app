@@ -18,7 +18,7 @@ type Quantities = {
 export const ProductList = ({
   products,
 }: {
-  products: { id: string; name: string; price: number; mediaUrl: string }[];
+  products: { id: string; name: string; price: number; mediaUrl: string, units: {label:string, step: number}[] }[];
 }) => {
   const [quantities, setQuantities] = useState<Quantities>({});
   const { cartItems, addToCart , removeFromCart} = useContext(CartContext)
@@ -26,23 +26,24 @@ export const ProductList = ({
   const increaseQuantity = (productId: string) => {
     setQuantities((prevQuantities) => ({
       ...prevQuantities,
-      [productId]: (prevQuantities[productId] || 0) + 1,
+      [productId]: Math.max(0, Math.round((prevQuantities[productId] || 0) * 10 + 1) / 10),
     }));
-    addToCart(products.find((product) => product.id === productId));
+    addToCart(products.find((product) => product.id === productId), 1); //TODO reemplazar 1 por qty
   };
 
   const decreaseQuantity = (productId: string) => {
     setQuantities((prevQuantities) => ({
       ...prevQuantities,
-      [productId]: Math.max(0, (prevQuantities[productId] || 0) - 1),
+      [productId]: Math.max(0, Math.round((prevQuantities[productId] || 0) * 10 - 1) / 10),
     }));
-    removeFromCart(products.find((product) => product.id === productId));
+    removeFromCart(products.find((product) => product.id === productId), 1); //TODO reemplazar 1 por qty
   };
   return (
     <div>
       <div className="gap-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
         {products.map((item, index) => (
           <Card
+            className={quantities[item.id] > 0 ? "card-selected" : ""}
             shadow="sm"
             key={index}
             // isPressable
@@ -62,8 +63,8 @@ export const ProductList = ({
               <b>{item.name}</b>
               <p className="text-default-500">${item.price}</p>
             </CardHeader>
-            <CardFooter className="flex items-center justify-between">
-              <div className="flex items-center">
+            <CardFooter className="flex items-center justify-center">
+              <div className="flex items-center justify-evenly" style={{width: "100%", maxWidth: "280px"}}>
                 <Button
                   color="primary"
                   isIconOnly
@@ -71,7 +72,10 @@ export const ProductList = ({
                 >
                   <FaMinus style={{ fontSize: "20px" }} />
                 </Button>
-                <span style={{ fontSize: "20px" }} className="px-4">{quantities[item.id] || 0}</span>
+                {/* <span style={{ fontSize: "20px" }} className="px-4">{quantities[item.id] || 0} {item.units}</span> */}
+                <div>
+                  <span style={{ fontSize: "20px" }} className="px-4">{quantities[item.id] || 0}</span><span className="text-default-500">{item.units && item.units[0].label}</span>
+                </div>
                 <Button
                   color="primary"
                   isIconOnly
@@ -80,11 +84,11 @@ export const ProductList = ({
                   <FaPlus style={{ fontSize: "20px" }} />
                 </Button>
               </div>
-              <div>
+              {/* <div>
                 <Button isIconOnly color="primary" aria-label="Cart">
                   <FaCartPlus style={{ fontSize: "20px" }} />
                 </Button>
-              </div>
+              </div> */}
             </CardFooter>
           </Card>
         ))}

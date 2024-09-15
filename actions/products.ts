@@ -21,17 +21,20 @@ const getProductById = async (id: string) => {
     price: product.price,
     description: product.description,
     mediaUrl: product.mediaUrl,
+    units: product.units,
   };
 };
 
 const getProducts = async () => {
   const products = await Product.find();
+  console.log(products);
   return products.map((product) => ({
     id: product._id.toString(),
     name: product.name,
     price: product.price,
     description: product.description,
     mediaUrl: product.mediaUrl,
+    units: product.units,
   }));
 };
 

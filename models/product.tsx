@@ -17,6 +17,10 @@ const productSchema = new mongoose.Schema({
     type: String,
     required: [true, "Please provide a mediaUrl"],
   },
+  units: {
+    type: Array,
+    required: [true, "Please provide units"],
+  },
 });
 
 export default mongoose.models.Product ||

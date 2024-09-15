@@ -5,32 +5,32 @@ export const CartContext = createContext({})
 export const CartProvider = ({ children }) => {
   const [cartItems, setCartItems] = useState(localStorage.getItem('cartItems') ? JSON.parse(localStorage.getItem('cartItems')) : [])
 
-  const addToCart = (item) => {
+  const addToCart = (item, qty) => {
     const isItemInCart = cartItems.find((cartItem) => cartItem.id === item.id);
 
     if (isItemInCart) {
       setCartItems(
         cartItems.map((cartItem) =>
           cartItem.id === item.id
-            ? { ...cartItem, quantity: cartItem.quantity + 1 }
+            ? { ...cartItem, quantity: cartItem.quantity + qty }
             : cartItem
         )
       );
     } else {
-      setCartItems([...cartItems, { ...item, quantity: 1 }]);
+      setCartItems([...cartItems, { ...item, quantity: qty }]);
     }
   };
 
-  const removeFromCart = (item) => {
+  const removeFromCart = (item, qty) => {
     const isItemInCart = cartItems.find((cartItem) => cartItem.id === item.id);
 
-    if (isItemInCart.quantity === 1) {
+    if (isItemInCart.quantity <= qty) {
       setCartItems(cartItems.filter((cartItem) => cartItem.id !== item.id));
     } else {
       setCartItems(
         cartItems.map((cartItem) =>
           cartItem.id === item.id
-            ? { ...cartItem, quantity: cartItem.quantity - 1 }
+            ? { ...cartItem, quantity: cartItem.quantity - qty }
             : cartItem
         )
       );
