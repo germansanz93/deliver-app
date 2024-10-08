@@ -18,32 +18,41 @@ type Quantities = {
 export const ProductList = ({
   products,
 }: {
-  products: { id: string; name: string; price: number; mediaUrl: string, units: {label:string, step: number}[] }[];
+  products: { id: string; name: string; price: number; mediaUrl: string, quantity: number, units: {label:string, step: number}[] }[];
 }) => {
-  const [quantities, setQuantities] = useState<Quantities>({});
+  // const [quantities, setQuantities] = useState<Quantities>({});
   const { cartItems, addToCart , removeFromCart} = useContext(CartContext)
 
-  const increaseQuantity = (productId: string) => {
-    setQuantities((prevQuantities) => ({
-      ...prevQuantities,
-      [productId]: Math.max(0, Math.round((prevQuantities[productId] || 0) * 10 + 1) / 10),
-    }));
+  const increaseQuantity = (productId: string, step: number) => {
+    console.log("productId", productId, "step", step)
+    // setQuantities((prevQuantities) => ({
+    //   ...prevQuantities,
+    //   [productId]: Math.max(0, Math.round(((prevQuantities[productId] + step) || 0) * 10) / 10),
+    // }));
     addToCart(products.find((product) => product.id === productId), 1); //TODO reemplazar 1 por qty
   };
 
   const decreaseQuantity = (productId: string) => {
-    setQuantities((prevQuantities) => ({
-      ...prevQuantities,
-      [productId]: Math.max(0, Math.round((prevQuantities[productId] || 0) * 10 - 1) / 10),
-    }));
+    // setQuantities((prevQuantities) => ({
+    //   ...prevQuantities,
+    //   [productId]: Math.max(0, Math.round((prevQuantities[productId] || 0) * 10 - 1) / 10),
+    // }));
     removeFromCart(products.find((product) => product.id === productId), 1); //TODO reemplazar 1 por qty
   };
+
+
+  const getItemById = (id: string): { id: string; name: string; price: number; mediaUrl: string, quantity: number, units: {label:string, step: number}[] } | undefined => {
+    const prod = cartItems.find((item) => item.id == id);
+    console.log("prod", prod)
+    return prod
+  };
+
   return (
     <div>
       <div className="gap-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
         {products.map((item, index) => (
           <Card
-            className={quantities[item.id] > 0 ? "card-selected" : ""}
+            className={cartItems[item.id] > 0 ? "card-selected" : ""}
             shadow="sm"
             key={index}
             // isPressable
@@ -74,12 +83,12 @@ export const ProductList = ({
                 </Button>
                 {/* <span style={{ fontSize: "20px" }} className="px-4">{quantities[item.id] || 0} {item.units}</span> */}
                 <div>
-                  <span style={{ fontSize: "20px" }} className="px-4">{quantities[item.id] || 0}</span><span className="text-default-500">{item.units && item.units[0].label}</span>
+                  <span style={{ fontSize: "20px" }} className="px-4">{getItemById(item.id)?.quantity || 0}</span><span className="text-default-500">{item.units && item.units[0].label}</span>
                 </div>
                 <Button
                   color="primary"
                   isIconOnly
-                  onClick={() => increaseQuantity(item.id)}
+                  onClick={() => increaseQuantity(item.id, item.units[0].step)}
                 >
                   <FaPlus style={{ fontSize: "20px" }} />
                 </Button>
