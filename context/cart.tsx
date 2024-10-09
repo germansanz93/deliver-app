@@ -1,18 +1,35 @@
-import { createContext, useState, useEffect } from 'react'
+import React, { createContext, useState, useEffect, ReactNode } from 'react'
+import { Product } from "@/dtos/Product";
+import Decimal from 'decimal.js';
 
-export const CartContext = createContext({})
 
-export const CartProvider = ({ children }) => {
-  const [cartItems, setCartItems] = useState(localStorage.getItem('cartItems') ? JSON.parse(localStorage.getItem('cartItems')) : [])
+type CartContextType = {
+  cartItems: Product[];
+  addToCart: (product: Product, quantity: Decimal) => void;
+  removeFromCart: (product: Product, quantity: Decimal) => void;
+  clearCart: () => void;
+  getCartTotal: () => Decimal;
+  getCartQuantity: () => Decimal;
+};
 
-  const addToCart = (item, qty) => {
-    const isItemInCart = cartItems.find((cartItem) => cartItem.id === item.id);
+type CartProviderProps = {
+  children: ReactNode;
+};
+
+export const CartContext = createContext<CartContextType | undefined>(undefined);
+
+export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
+  const [cartItems, setCartItems] = useState<Product[]>(
+    localStorage.getItem('cartItems') ? JSON.parse(localStorage.getItem('cartItems') as string) : []
+  );
+  const addToCart = (item:Product, qty: Decimal) => {
+    const isItemInCart = cartItems.find((cartItem: Product) => cartItem.id === item.id);
 
     if (isItemInCart) {
       setCartItems(
-        cartItems.map((cartItem) =>
+        cartItems.map((cartItem: Product) =>
           cartItem.id === item.id
-            ? { ...cartItem, quantity: cartItem.quantity + qty }
+            ? { ...cartItem, quantity: cartItem.quantity.add(qty) }
             : cartItem
         )
       );
@@ -21,19 +38,25 @@ export const CartProvider = ({ children }) => {
     }
   };
 
-  const removeFromCart = (item, qty) => {
-    const isItemInCart = cartItems.find((cartItem) => cartItem.id === item.id);
-
-    if (isItemInCart.quantity <= qty) {
-      setCartItems(cartItems.filter((cartItem) => cartItem.id !== item.id));
+  const removeFromCart = (item: Product, qty: Decimal) => {
+    const isItemInCart = cartItems.find((cartItem: Product) => cartItem.id === item.id);
+    console.log('isItemInCart', isItemInCart);
+    if (isItemInCart) {
+      if (isItemInCart.quantity <= qty) {
+        console.log('removing item');
+        setCartItems(cartItems.filter((cartItem: Product) => cartItem.id !== item.id));
+      } else {
+        console.log('subtracting item', qty);
+        setCartItems(
+          cartItems.map((cartItem: Product) =>
+            cartItem.id === item.id
+              ? { ...cartItem, quantity: cartItem.quantity.sub(qty) }
+              : cartItem
+          )
+        );
+      }
     } else {
-      setCartItems(
-        cartItems.map((cartItem) =>
-          cartItem.id === item.id
-            ? { ...cartItem, quantity: cartItem.quantity - qty }
-            : cartItem
-        )
-      );
+      console.error('Item not found in cart');
     }
   };
 
@@ -42,11 +65,11 @@ export const CartProvider = ({ children }) => {
   };
 
   const getCartTotal = () => {
-    return cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
+    return cartItems.reduce((total: Decimal, item: Product) => total.plus(item.price.times(item.quantity)), new Decimal(0));
   };
 
   const getCartQuantity = () => {
-    return cartItems.reduce((total, item) => total + item.quantity, 0);
+    return cartItems.reduce((total: Decimal, item: Product) => total.plus(item.quantity), new Decimal(0));
   }
 
   useEffect(() => {
