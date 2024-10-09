@@ -33,7 +33,7 @@ export const ProductList = ({
   const { cartItems, addToCart, removeFromCart } = cartContext;
 
 
-  const increaseQuantity = (productId: string, step: Decimal) => {
+  const increaseQuantity = (productId: string, step: number) => {
     console.log("productId", productId, "step", step)
     const p = products.find((product) => product.id === productId)
     if(p){
@@ -41,7 +41,7 @@ export const ProductList = ({
     }
   };
 
-  const decreaseQuantity = (productId: string, step: Decimal) => {
+  const decreaseQuantity = (productId: string, step: number) => {
     console.log("productId", productId, "step", step)
     const p = products.find((product) => product.id === productId)
     if(p){
@@ -63,7 +63,7 @@ export const ProductList = ({
           const cartItem = cartItems.find((cartItem: Product) => cartItem.id === item.id);
           return (
           <Card
-            className={cartItem && cartItem.quantity && cartItem.quantity.comparedTo(0) == 0 ? "card-selected" : ""}
+            className={cartItem && cartItem.quantity && cartItem.quantity > 0 ? "card-selected" : ""}
             shadow="sm"
             key={index}
             // isPressable
@@ -81,7 +81,7 @@ export const ProductList = ({
             </CardBody>
             <CardHeader className="justify-between">
               <b>{item.name}</b>
-              <p className="text-default-500">${item.price.toNumber()}</p>
+              <p className="text-default-500">${item.price}</p>
             </CardHeader>
             <CardFooter className="flex items-center justify-center">
               <div className="flex items-center justify-evenly" style={{width: "100%", maxWidth: "280px"}}>
@@ -94,7 +94,7 @@ export const ProductList = ({
                 </Button>
                 {/* <span style={{ fontSize: "20px" }} className="px-4">{quantities[item.id] || 0} {item.units}</span> */}
                 <div>
-                  <span style={{ fontSize: "20px" }} className="px-4">{getItemById(item.id)?.quantity.toNumber() || 0}</span><span className="text-default-500">{item.units && item.units[0].label}</span>
+                  <span style={{ fontSize: "20px" }} className="px-4">{getItemById(item.id)?.quantity || 0}</span><span className="text-default-500">{item.units && item.units[0].label}</span>
                 </div>
                 <Button
                   color="primary"

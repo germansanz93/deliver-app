@@ -1,10 +1,8 @@
-import Decimal from 'decimal.js';
-
 export type Product = {
   id: string; 
   name: string; 
-  price: Decimal; 
+  price: number; 
   mediaUrl: string, 
-  quantity: Decimal, 
-  units: {label:string, step: Decimal}[]
+  quantity: number, 
+  units: {label:string, step: number}[]
 }
